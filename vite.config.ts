@@ -7,7 +7,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/", // Base path for GitHub Pages
+  base: "/daisyui-matsu-theme/", // Updated base path for GitHub Pages
   plugins: [
     react(),
     tsconfigPaths(),
@@ -24,31 +24,31 @@ export default defineConfig({
         display: "standalone",
         icons: [
           {
-            src: "/icons/icon-192x192.png",
+            src: "/daisyui-matsu-theme/icons/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-192x192.png",
+            src: "/daisyui-matsu-theme/icons/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "/icons/icon-512x512.png",
+            src: "/daisyui-matsu-theme/icons/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-512x512.png",
+            src: "/daisyui-matsu-theme/icons/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "/icons/apple-touch-icon.png",
+            src: "/daisyui-matsu-theme/icons/apple-touch-icon.png",
             sizes: "180x180",
             type: "image/png",
             purpose: "apple-touch-icon",
