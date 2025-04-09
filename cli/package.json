@@ -1,6 +1,6 @@
 {
     "name": "daisyui-matsu-theme",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A CLI tool to add the Matsu theme to your DaisyUI v5+ and TailwindCSS v4+ project",
     "main": "src/index.js",
     "bin": {
