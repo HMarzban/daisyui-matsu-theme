@@ -222,7 +222,7 @@ export default function Layout({ children }: prop) {
   }
 
   .texture {
-    background-image: url(/assets/texture.jpg);
+    background-image: url(https://hmarzban.github.io/daisyui-matsu-theme/assets/texture.jpg);
     background-size: 100% 100%;
     background-repeat: repeat;
     opacity: 0.12;

@@ -54,3 +54,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+cli/node_modules
