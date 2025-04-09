@@ -220,20 +220,34 @@ function main() {
 
   if (success) {
     console.log(chalk.green(`✅ Successfully installed ${THEME_NAME}!`));
+
     console.log(
       chalk.blue(
-        `To use the theme, make sure you have this in your tailwind.config.js:`
+        `For React projects, you can use the theme by adding the data-theme attribute to your HTML element:`
       )
     );
     console.log(
       chalk.white(`
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {},
-  },
+<!-- _document.tsx -->
+<body className="antialiased">
+  <!-- Your content here -->
+</body>
+
+<!-- layout.tsx -->
+import React from "react";
+
+type prop = {
+  children: React.ReactNode;
 };
+
+export default function Layout({ children }: prop) {
+  return (
+    <div className="relative">
+      <div className="texture" />
+      {children}
+    </div>
+  );
+}
     `)
     );
   } else {
