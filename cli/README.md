@@ -1,11 +1,15 @@
 # DaisyUI Matsu Theme CLI
 
-A CLI tool to add the Matsu theme to your DaisyUI v5+ and TailwindCSS v4+ project.
+A CLI tool to add the Matsu-theme to your DaisyUI project.
+
+![Matsu Theme Preview](../public/Gn_FI12XsAA2vPu.jpeg)
+
+Checkout [demo](https://hmarzban.github.io/daisyui-matsu-theme/)
 
 ## Prerequisites
 
-- TailwindCSS v4.0.0 or higher
-- DaisyUI v5.0.0 or higher
+- TailwindCSS `v4.0.0` or higher
+- DaisyUI `v5.0.0` or higher
 - A CSS file with `@import "tailwindcss"` and `@plugin "daisyui"` declarations
 
 ## Installation
@@ -38,15 +42,6 @@ daisyui-matsu-theme
 2. Checks if DaisyUI v5+ is installed
 3. Finds CSS/SCSS files with `@import "tailwindcss"` and `@plugin "daisyui"`
 4. Adds the Matsu theme to those files
-
-## Theme Preview
-
-The Matsu theme is inspired by Studio Ghibli's aesthetic, featuring:
-
-- Soft, warm colors
-- Hand-drawn style borders
-- Friendly, rounded shapes
-- Nostalgic feel
 
 ## License
 
