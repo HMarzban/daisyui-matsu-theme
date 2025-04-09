@@ -24,7 +24,7 @@ function HomeComponent() {
         <ThemeIntro />
 
         <Suspense fallback={<LoadingComponent />}>
-          <div className="mb-30 w-full">
+          <div className="mb-10 w-full">
             <InstallTheme />
           </div>
         </Suspense>
