@@ -1,0 +1,32 @@
+{
+    "name": "daisyui-matsu-theme",
+    "version": "0.1.0",
+    "description": "A CLI tool to add the Matsu theme to your DaisyUI v5+ and TailwindCSS v4+ project",
+    "main": "src/index.js",
+    "bin": {
+        "daisyui-matsu-theme": "src/index.js"
+    },
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "keywords": [
+        "daisyui",
+        "theme",
+        "cli",
+        "tailwindcss",
+        "matsu"
+    ],
+    "author": "M.Hossein",
+    "license": "MIT",
+    "homepage": "https://github.com/HMarzban/daisyui-matsu-theme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/HMarzban/daisyui-matsu-theme.git"
+    },
+    "dependencies": {
+        "chalk": "^4.1.2"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}

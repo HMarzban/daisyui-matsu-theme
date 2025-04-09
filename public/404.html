@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Redirecting</title>
+    <script>
+        // Single Page App redirect for GitHub Pages
+        const pathSegmentsToKeep = 1;
+
+        const l = window.location;
+        const origin = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '');
+        const baseUrl = origin + l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/';
+        const repoName = l.pathname.split('/')[1]; // Get repo name for GitHub Pages
+        const restOfUrl = l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/');
+
+        // Redirect to the index.html with proper URL for GitHub Pages SPA
+        window.location.href = baseUrl + '?p=' + restOfUrl + l.search + l.hash;
+    </script>
+</head>
+
+<body>
+    <h1>Redirecting...</h1>
+    <p>If you are not redirected automatically, <a href="/">click here</a>.</p>
+</body>
+
+</html>

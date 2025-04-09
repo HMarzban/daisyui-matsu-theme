@@ -1,0 +1,11 @@
+[install]
+# Use exactly the dependency version specified
+exact = true
+
+[install.cache]
+# Configure caching
+dir = "node_modules/.cache/bun"
+
+[test]
+# Create coverage reports
+coverage = true
