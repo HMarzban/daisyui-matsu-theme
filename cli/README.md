@@ -2,7 +2,7 @@
 
 A CLI tool to add the Matsu-theme to your DaisyUI project.
 
-![Matsu Theme Preview](../public/Gn_FI12XsAA2vPu.jpeg)
+![Matsu Theme Preview](https://github.com/HMarzban/daisyui-matsu-theme/blob/main/public/Gn_FI12XsAA2vPu.jpeg?raw=true)
 
 Checkout [demo](https://hmarzban.github.io/daisyui-matsu-theme/)
 
