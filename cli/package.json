@@ -6,6 +6,10 @@
     "bin": {
         "daisyui-matsu-theme": "src/index.js"
     },
+    "files": [
+        "src/index.js",
+        "src/matsu-theme.css"
+    ],
     "scripts": {
         "start": "node src/index.js"
     },
