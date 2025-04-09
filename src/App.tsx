@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { registerSW } from "virtual:pwa-register";
 
 import Home from "./pages/Home";
-import Layout from "./components/Layout";
 import PWANotification from "./components/PWANotification";
 
 // Custom hook for PWA functionality
@@ -41,17 +40,15 @@ function App() {
   const { offlineReady, needRefresh, updateSW } = usePWA();
 
   return (
-    <>
+    <div className="relative bg-base-100" data-theme="matsu">
       <div className="texture"></div>
-      <Layout>
-        <Home />
-      </Layout>
+      <Home />
       <PWANotification
         offline={offlineReady}
         update={needRefresh}
         onUpdate={updateSW}
       />
-    </>
+    </div>
   );
 }
 

@@ -5,6 +5,7 @@ import css from "highlight.js/lib/languages/css";
 import javascript from "highlight.js/lib/languages/javascript";
 import bash from "highlight.js/lib/languages/bash";
 import { Download, Copy, X, Check, Terminal, Code } from "lucide-react";
+import { FaNpm, FaGithub } from "react-icons/fa";
 
 // Register the languages
 hljs.registerLanguage("typescript", typescript);
@@ -240,10 +241,7 @@ export default function Layout({ children }: prop) {
 
   return (
     <div className="w-full install-theme">
-      <h2 className="text-2xl text-center font-bold mb-6">Install theme</h2>
-      <p className="text-center mb-6">
-        Choose your preferred installation method
-      </p>
+      <h2 className="text-2xl text-left font-bold mb-6">Install theme</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* CLI Installation Option */}
@@ -281,6 +279,15 @@ export default function Layout({ children }: prop) {
                 )}
               </button>
             </div>
+            <div className="card-actions justify-start">
+              <a
+                href="https://www.npmjs.com/package/daisyui-matsu-theme"
+                className="btn btn-link flex gap-2"
+                target="_blank"
+              >
+                View on <FaNpm size={32} style={{ color: "#CC3534" }} />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -291,6 +298,7 @@ export default function Layout({ children }: prop) {
               <Code size={20} className="text-primary" />
               Manual Installation
             </h3>
+
             <p className="text-sm mb-4">
               Advanced installation with full control over the process
             </p>
@@ -301,6 +309,14 @@ export default function Layout({ children }: prop) {
               <Download size={16} />
               Get Installation Files
             </button>
+            <div className="card-actions justify-start">
+              <a
+                href="https://github.com/HMarzban/daisyui-matsu-theme"
+                className="btn btn-link flex gap-2"
+              >
+                View on <FaGithub size={20} style={{ color: "#000" }} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
