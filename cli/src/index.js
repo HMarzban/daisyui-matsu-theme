@@ -2,259 +2,103 @@
 
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const postcss = require("postcss");
 const chalk = require("chalk");
 
-// Constants
-const THEME_NAME = "matsu-theme";
-const REQUIRED_TAILWIND_VERSION = "4.0.0";
-const REQUIRED_DAISYUI_VERSION = "5.0.0";
-// Get the path to the theme file
 const THEME_FILE_PATH = path.join(__dirname, "matsu-theme.css");
+const IGNORED_DIRECTORIES = new Set(["node_modules", "dist", "build", "coverage"]);
+const unquote = (value) => value.trim().replace(/^(['"])(.*)\1$/, "$2");
 
-// Helper functions
-function checkDependency(name, requiredVersion) {
-  try {
-    // Try to find the package.json in the current directory
-    const packageJsonPath = path.join(process.cwd(), "package.json");
-
-    if (!fs.existsSync(packageJsonPath)) {
-      console.error(
-        chalk.red(`Error: Cannot find package.json in the current directory.`)
-      );
-      return false;
+function checkDependencies(cwd) {
+  const manifest = JSON.parse(fs.readFileSync(path.join(cwd, "package.json"), "utf8"));
+  const dependencies = { ...manifest.dependencies, ...manifest.devDependencies };
+  for (const [name, minimum] of [["tailwindcss", 4], ["daisyui", 5]]) {
+    const declared = dependencies[name] || "";
+    // Unknown tags, URLs and workspace aliases need manual installation, not a guessed version.
+    const match = declared.match(/^(?:\^|~|>=|=)?\s*(\d+)(?:\.|$)/);
+    if (!match || Number(match[1]) < minimum) {
+      throw new Error(`Declare ${name} v${minimum}+ in package.json before installing Matsu (found ${declared || "missing"}).`);
     }
-
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-
-    // Check dependencies and devDependencies
-    const dependencies = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
-    };
-
-    if (!dependencies[name]) {
-      console.error(
-        chalk.red(`Error: ${name} is not installed. Please install it first.`)
-      );
-      return false;
-    }
-
-    // Extract version from semver notation
-    const installedVersion = dependencies[name].replace(/[^0-9.]/g, "");
-
-    // Simple semver comparison for major version
-    const installedMajor = parseInt(installedVersion.split(".")[0], 10);
-    const requiredMajor = parseInt(requiredVersion.split(".")[0], 10);
-
-    if (installedMajor < requiredMajor) {
-      console.error(
-        chalk.red(
-          `Error: ${name} version ${installedVersion} is lower than required version ${requiredVersion}.`
-        )
-      );
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error(
-      chalk.red(`Error checking dependency ${name}: ${error.message}`)
-    );
-    return false;
   }
 }
 
-function findStyleFiles() {
-  // Find all CSS/SCSS files in the project
-  const styleFiles = [];
-
-  function scanDir(dir) {
-    const files = fs.readdirSync(dir);
-
-    for (const file of files) {
-      const filePath = path.join(dir, file);
-      const stat = fs.statSync(filePath);
-
-      if (
-        stat.isDirectory() &&
-        !file.startsWith("node_modules") &&
-        !file.startsWith(".git")
-      ) {
-        scanDir(filePath);
-      } else if (file.endsWith(".css") || file.endsWith(".scss")) {
-        styleFiles.push(filePath);
-      }
-    }
-  }
-
-  scanDir(process.cwd());
-  return styleFiles;
+function findStyleFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    if (entry.isSymbolicLink() || entry.name.startsWith(".")) return [];
+    const file = path.join(dir, entry.name);
+    if (entry.isDirectory()) return IGNORED_DIRECTORIES.has(entry.name) ? [] : findStyleFiles(file);
+    return /\.(css|scss)$/.test(entry.name) ? [file] : [];
+  }).sort();
 }
 
-function checkAndAppendTheme() {
-  // Find style files
-  const styleFiles = findStyleFiles();
-
-  if (styleFiles.length === 0) {
-    console.error(
-      chalk.red(`Error: No CSS or SCSS files found in the project.`)
-    );
-    return false;
-  }
-
-  let tailwindImportFound = false;
-  let daisyuiPluginFound = false;
-  let themeAppended = false;
-
-  // Read theme content from external file
-  let themeContent;
-  try {
-    themeContent = fs.readFileSync(THEME_FILE_PATH, "utf8");
-  } catch (error) {
-    console.error(chalk.red(`Error reading theme file: ${error.message}`));
-    return false;
-  }
-
-  for (const file of styleFiles) {
-    const content = fs.readFileSync(file, "utf8");
-
-    // Check if file imports tailwindcss
-    if (content.includes('@import "tailwindcss"')) {
-      tailwindImportFound = true;
-
-      // Check if file has daisyui plugin
-      if (content.includes('@plugin "daisyui"')) {
-        daisyuiPluginFound = true;
-
-        // Check if our theme is already appended
-        if (content.includes('@plugin "daisyui/theme" {')) {
-          // Check if specifically matsu theme is already installed
-          if (content.includes('name: "matsu"')) {
-            console.log(
-              chalk.yellow(`Matsu theme is already installed in ${file}`)
-            );
-            themeAppended = true;
-            continue;
-          } else {
-            console.log(
-              chalk.yellow(
-                `A different daisyUI theme is already installed in ${file}. Will replace with matsu theme.`
-              )
-            );
-
-            // Replace the existing theme with our matsu theme
-            const themeRegex = /@plugin\s+"daisyui\/theme"\s+{[\s\S]*?}/;
-            let updatedContent = content.replace(themeRegex, themeContent);
-            fs.writeFileSync(file, updatedContent);
-            console.log(
-              chalk.green(
-                `Successfully replaced existing theme with matsu theme in ${file}`
-              )
-            );
-            themeAppended = true;
-            continue;
-          }
-        }
-
-        // Append our theme after daisyui plugin
-        let updatedContent = content.replace(
-          '@plugin "daisyui";',
-          `@plugin "daisyui";\n${themeContent}`
-        );
-
-        fs.writeFileSync(file, updatedContent);
-        console.log(
-          chalk.green(`Successfully appended matsu theme to ${file}`)
-        );
-        themeAppended = true;
-      }
-    }
-  }
-
-  if (!tailwindImportFound) {
-    console.error(
-      chalk.red(`Error: No file with '@import "tailwindcss"' found.`)
-    );
-    return false;
-  }
-
-  if (!daisyuiPluginFound) {
-    console.error(chalk.red(`Error: No file with '@plugin "daisyui"' found.`));
-    return false;
-  }
-
-  return themeAppended;
+function isEntry(root) {
+  return root.nodes.some((node) => node.type === "atrule" && node.name === "import" && /^(['"])tailwindcss\1(?:\s|$)/.test(node.params)) &&
+    root.nodes.some((node) => node.type === "atrule" && node.name === "plugin" && unquote(node.params) === "daisyui");
 }
 
-// Main function
-function main() {
-  console.log(chalk.blue(`🎭 Installing ${THEME_NAME} for daisyUI...`));
+function addTheme(content, file) {
+  const root = postcss.parse(content, { from: file });
+  if (!isEntry(root)) throw new Error(`${file} must contain a Tailwind import and a daisyUI plugin at the top level.`);
+  let installed = false;
+  root.walkAtRules("plugin", (plugin) => {
+    if (unquote(plugin.params) !== "daisyui/theme") return;
+    plugin.each((node) => {
+      if (node.type === "decl" && node.prop === "name" && unquote(node.value) === "matsu") installed = true;
+    });
+  });
+  if (installed) return content;
 
-  // Check dependencies
-  const hasTailwind = checkDependency("tailwindcss", REQUIRED_TAILWIND_VERSION);
-  const hasDaisyUI = checkDependency("daisyui", REQUIRED_DAISYUI_VERSION);
-
-  if (!hasTailwind || !hasDaisyUI) {
-    console.log(
-      chalk.yellow(`Please install the required dependencies and try again:`)
-    );
-
-    if (!hasTailwind) {
-      console.log(chalk.white(`  npm install tailwindcss@latest`));
-      console.log(chalk.white(`  # or`));
-      console.log(chalk.white(`  yarn add tailwindcss@latest`));
-    }
-
-    if (!hasDaisyUI) {
-      console.log(chalk.white(`  npm install daisyui@latest`));
-      console.log(chalk.white(`  # or`));
-      console.log(chalk.white(`  yarn add daisyui@latest`));
-    }
-
-    process.exit(1);
-  }
-
-  // Check and append theme
-  const success = checkAndAppendTheme();
-
-  if (success) {
-    console.log(chalk.green(`✅ Successfully installed ${THEME_NAME}!`));
-
-    console.log(
-      chalk.blue(
-        `For React projects, you can use the theme by adding the data-theme attribute to your HTML element:`
-      )
-    );
-    console.log(
-      chalk.white(`
-<!-- _document.tsx -->
-<body className="antialiased">
-  <!-- Your content here -->
-</body>
-
-<!-- layout.tsx -->
-import React from "react";
-
-type prop = {
-  children: React.ReactNode;
-};
-
-export default function Layout({ children }: prop) {
-  return (
-    <div className="relative">
-      <div className="texture" />
-      {children}
-    </div>
-  );
-}
-    `)
-    );
-  } else {
-    console.error(chalk.red(`❌ Failed to install ${THEME_NAME}.`));
-    process.exit(1);
-  }
+  const theme = postcss.parse(fs.readFileSync(THEME_FILE_PATH, "utf8"));
+  // Adding a theme should preserve the project's chosen default as well as its CSS.
+  theme.walkAtRules("plugin", (plugin) => {
+    plugin.walkDecls("default", (decl) => { decl.value = "false"; });
+  });
+  const imports = [];
+  theme.walkAtRules("import", (node) => { imports.push(node.clone()); node.remove(); });
+  // CSS imports must precede normal rules. Leave existing rules and themes in place.
+  root.prepend(...imports);
+  root.append(theme.nodes);
+  return root.toString();
 }
 
-// Run the main function
-main();
+function main(args = process.argv.slice(2), cwd = process.cwd()) {
+  const dryRun = args.includes("--dry-run");
+  let selected;
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--dry-run") continue;
+    if (args[i] === "--file" && args[i + 1] && !args[i + 1].startsWith("--")) selected = args[++i];
+    else throw new Error("Usage: daisyui-matsu-theme [--dry-run] [--file path/to/styles.css]");
+  }
+  checkDependencies(cwd);
+  const files = selected ? [path.resolve(cwd, selected)] : findStyleFiles(cwd);
+  const candidates = files.filter((file) => {
+    // Never follow symlinks out of the selected project, including explicit paths.
+    const relative = path.relative(fs.realpathSync(cwd), fs.realpathSync(file));
+    if (relative.startsWith(`..${path.sep}`) || relative === ".." || path.isAbsolute(relative)) throw new Error("Choose a stylesheet inside the current project.");
+    return isEntry(postcss.parse(fs.readFileSync(file, "utf8"), { from: file }));
+  });
+  if (candidates.length !== 1) {
+    throw new Error(candidates.length ? `Multiple Tailwind entry stylesheets found. Select one with --file:\n${candidates.join("\n")}` : "No stylesheet contains both a Tailwind import and a daisyUI plugin. Use --file to select your entry stylesheet.");
+  }
+  const file = candidates[0];
+  const content = fs.readFileSync(file, "utf8");
+  const updated = addTheme(content, file);
+  if (updated === content) {
+    console.log(chalk.yellow(`Matsu is already installed in ${file}; no changes made.`));
+    return;
+  }
+  if (dryRun) {
+    console.log(chalk.blue(`Would add Matsu to ${file}; no files changed. Existing themes and default selection are preserved.`));
+    return;
+  }
+  fs.writeFileSync(file, updated);
+  console.log(chalk.green(`Added Matsu to ${file}. Existing themes and default selection are preserved.`));
+  console.log('Choose Matsu with data-theme="matsu" on your HTML element.');
+}
+
+if (require.main === module) {
+  try { main(); }
+  catch (error) { console.error(chalk.red(`Error: ${error.message}`)); process.exitCode = 1; }
+}
+
+module.exports = { addTheme, main };
