@@ -1,37 +1,39 @@
 {
-    "name": "daisyui-matsu-theme",
-    "version": "0.1.6",
-    "description": "A CLI tool to add the Matsu theme to your DaisyUI v5+ and TailwindCSS v4+ project",
-    "main": "src/index.js",
-    "bin": {
-        "daisyui-matsu-theme": "src/index.js"
-    },
-    "files": [
-        "src/index.js",
-        "src/matsu-theme.css"
-    ],
-    "scripts": {
-        "start": "node src/index.js",
-        "publish": "npm publish"
-    },
-    "keywords": [
-        "daisyui",
-        "theme",
-        "cli",
-        "tailwindcss",
-        "matsu"
-    ],
-    "author": "M.Hossein",
-    "license": "MIT",
-    "homepage": "https://github.com/HMarzban/daisyui-matsu-theme",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/HMarzban/daisyui-matsu-theme.git"
-    },
-    "dependencies": {
-        "chalk": "^4.1.2"
-    },
-    "engines": {
-        "node": ">=14.0.0"
-    }
+  "name": "daisyui-matsu-theme",
+  "version": "0.1.6",
+  "description": "A CLI tool to add the Matsu theme to your DaisyUI v5+ and TailwindCSS v4+ project",
+  "main": "src/index.js",
+  "bin": {
+    "daisyui-matsu-theme": "src/index.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/matsu-theme.css"
+  ],
+  "scripts": {
+    "start": "node src/index.js",
+    "publish": "npm publish",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "daisyui",
+    "theme",
+    "cli",
+    "tailwindcss",
+    "matsu"
+  ],
+  "author": "M.Hossein",
+  "license": "MIT",
+  "homepage": "https://github.com/HMarzban/daisyui-matsu-theme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HMarzban/daisyui-matsu-theme.git"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "postcss": "^8.5.28"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }

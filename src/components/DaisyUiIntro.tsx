@@ -329,7 +329,7 @@ const DaisyUiIntro = ({ className }: { className?: string }) => {
             </div>
           </div>
           <div className="mt-6">
-            <a className="btn btn-block" href="/docs/colors/">
+            <a className="btn btn-block" href="https://daisyui.com/docs/colors/">
               Learn more about colors
             </a>
           </div>

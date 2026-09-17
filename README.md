@@ -1,6 +1,8 @@
 # ✨ Matsu Theme for DaisyUI
 
-Hey there! Welcome to **Matsu** - a magical Studio Ghibli inspired theme for DaisyUI that brings the whimsical charm of Ghibli films to your web projects! 🌿
+Matsu adapts warm colors, typography, and tactile component styles to DaisyUI 5 and Tailwind CSS 4.
+
+[Explore the component demo](https://hmarzban.github.io/daisyui-matsu-theme/). Inspired by [Matt Wierzbicki’s Matsu theme](https://matsu-theme.vercel.app/).
 
 ![Matsu Theme Preview](./public/Gn_FI12XsAA2vPu.jpeg)
 
@@ -21,7 +23,13 @@ Matsu captures the enchanting spirit of Studio Ghibli's art style with:
 npx daisyui-matsu-theme
 ```
 
-That's it! The CLI automatically detects and configures your DaisyUI project.
+The CLI source in this repository preserves existing themes and the selected default. It adds Matsu as an option you can enable with `data-theme="matsu"`. Use `--dry-run` to inspect the target, or `--file path/to/styles.css` when there is more than one Tailwind entry. These options will be available from npm after the next CLI release; see the [local CLI instructions](cli/README.md#test-the-cli-from-source).
+
+## Implementation and limits
+
+The theme is CSS: DaisyUI semantic color tokens plus scoped typography, shadows, and texture styles. The React app is a component preview, not a required runtime for using the theme. The installer parses CSS with PostCSS so configured plugin blocks and existing custom themes stay intact. Re-running it leaves a customized Matsu block untouched; upgrading that block is a deliberate manual edit.
+
+The CLI supports a stylesheet that contains both the Tailwind import and DaisyUI plugin. Split configuration across imports and workspace dependency aliases need manual installation. Google Fonts and the optional hosted texture need network access unless self-hosted. Run `npm ci --prefix cli` and `npm test` for installer fixtures; `bun run build` validates the preview.
 
 [More CLI options →](./cli/README.md)
 

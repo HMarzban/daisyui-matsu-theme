@@ -13,7 +13,7 @@
     "build": "bun run tsc && bun run vite build",
     "preview": "bun run vite preview",
     "lint": "bun run eslint .",
-    "test": "bun run vite build && bun run vite preview --port 8080",
+    "test": "npm --prefix cli test",
     "predeploy": "bun run build",
     "deploy": "gh-pages -d dist",
     "clean": "rm -rf dist node_modules/.vite"
