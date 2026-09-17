@@ -23,7 +23,7 @@ Matsu captures the enchanting spirit of Studio Ghibli's art style with:
 npx daisyui-matsu-theme
 ```
 
-The CLI source in this repository preserves existing themes and the selected default. It adds Matsu as an option you can enable with `data-theme="matsu"`. Use `--dry-run` to inspect the target, or `--file path/to/styles.css` when there is more than one Tailwind entry. These options will be available from npm after the next CLI release; see the [local CLI instructions](cli/README.md#test-the-cli-from-source).
+The 0.2.1 CLI preserves existing themes and the selected default. It adds Matsu as an option you can enable with `data-theme="matsu"`. Use `--dry-run` to inspect the target, or `--file path/to/styles.css` when there is more than one Tailwind entry. See the [CLI instructions](cli/README.md) for usage and local testing.
 
 ## Implementation and limits
 

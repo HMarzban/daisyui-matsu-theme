@@ -36,7 +36,7 @@ Or if installed globally:
 daisyui-matsu-theme
 ```
 
-## What the current source does
+## What the installer does
 
 1. Checks package.json for declared Tailwind CSS v4+ and DaisyUI v5+ versions.
 2. Finds the entry stylesheet containing both the Tailwind import and DaisyUI plugin. Multiple entries require `--file`.
@@ -47,7 +47,7 @@ It skips generated directories, dot directories, and symlinks. Invalid CSS or an
 
 ## Test the CLI from source
 
-The preservation fixes and flags below are in source and await an npm release:
+Version 0.2.1 includes theme preservation, `--dry-run`, and `--file`. To test a local checkout:
 
 ```bash
 # In this repository
